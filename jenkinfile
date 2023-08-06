@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from your version control system (e.g., Git)
+                // Make sure you have appropriate credentials configured in Jenkins
+                git branch: 'main', url: 'https://github.com/manugem1822/cicdjenkin.git'
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                // Install Node.js and npm (you may need to configure the Node.js tool in Jenkins)
+                sh 'npm install'
+            }
+        }        
+             
+        stage('Build') {
+            steps {
+                // Perform any build steps here (e.g., transpiling, bundling, etc.)
+                // Adjust the command based on your project's build process
+                sh 'npm run build'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                // Deploy your application to the server or platform of choice
+                // This step depends on how you want to deploy your Node.js app
+                // It could involve copying files to a server, deploying to cloud platforms, etc.
+                // Adjust the command according to your deployment process
+                sh 'npm run deploy'
+            }
+        }
+        
+        stage('Restart Application') {
+            steps {
+                // Restart the application using PM2
+                // Assuming you have PM2 installed globally or locally in your project
+                sh 'sudo pm2 restart app' // Replace 'your-app-name' with the actual name of your application in PM2
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Clean up artifacts or perform any post-build actions here
+        }
+        
+        success {
+            // Actions to perform when the pipeline succeeds (e.g., notifications, etc.)
+        }
+        
+        failure {
+            // Actions to perform when the pipeline fails (e.g., notifications, etc.)
+        }
+    }
+}
